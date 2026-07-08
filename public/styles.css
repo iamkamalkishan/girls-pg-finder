@@ -1,0 +1,141 @@
+:root {
+  --pink: #e91e8c;
+  --pink-dark: #c2185b;
+  --purple: #7b2ff7;
+  --bg: #fce4f1;
+  --card: #ffffff;
+  --text: #2d2d3a;
+  --muted: #888;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  padding-bottom: 20px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.app-header {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: #fff;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+.logo { font-size: 24px; font-weight: 800; }
+.tagline { font-size: 12px; opacity: 0.9; }
+
+.tabs {
+  display: flex;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 10;
+  border-bottom: 1px solid #eee;
+}
+.tab {
+  flex: 1;
+  padding: 12px 4px;
+  border: none;
+  background: none;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tab.active { color: var(--pink); font-weight: 700; border-bottom: 3px solid var(--pink); }
+
+main { padding: 14px; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.filters { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.filters input, .filters select, .filters textarea {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 15px;
+  width: 100%;
+}
+.filters textarea { min-height: 70px; resize: vertical; }
+.row { display: flex; gap: 10px; }
+.row input, .row select { flex: 1; }
+.check { font-size: 14px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: #fff;
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(233,30,140,0.3);
+}
+.btn-primary:active { transform: scale(0.98); }
+
+.results { display: flex; flex-direction: column; gap: 14px; }
+.card {
+  background: var(--card);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+  cursor: pointer;
+  animation: fade 0.3s ease;
+}
+@keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; } }
+.card-img {
+  height: 140px;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 40px;
+}
+.card-body { padding: 12px; }
+.card-title { font-size: 17px; font-weight: 700; }
+.card-meta { font-size: 13px; color: var(--muted); margin: 4px 0; }
+.card-price { font-size: 18px; font-weight: 800; color: var(--pink-dark); }
+.badge {
+  display: inline-block;
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 6px;
+}
+.badge.warn { background: #fff3e0; color: #ef6c00; }
+
+.info-box { background: #fff; padding: 16px; border-radius: 14px; text-align: center; }
+
+.modal {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex; align-items: flex-end; justify-content: center;
+  z-index: 100;
+}
+.modal.hidden { display: none; }
+.modal-content {
+  background: #fff;
+  width: 100%; max-width: 500px;
+  border-radius: 20px 20px 0 0;
+  padding: 20px;
+  max-height: 90vh; overflow-y: auto;
+  animation: slide 0.3s ease;
+}
+@keyframes slide { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.close { float: right; font-size: 26px; cursor: pointer; color: var(--muted); }
+.modal h2 { font-size: 20px; margin-bottom: 8px; }
+.modal img { width: 100%; border-radius: 12px; margin: 10px 0; }
+.review { background: #f5f5f5; padding: 8px; border-radius: 8px; margin: 6px 0; font-size: 13px; }
+.amenity { display: inline-block; background: #fce4f1; color: var(--pink-dark); font-size: 11px; padding: 3px 8px; border-radius: 8px; margin: 3px; }
+
+.toast {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  background: #333; color: #fff; padding: 12px 20px; border-radius: 20px; font-size: 14px;
+  z-index: 200; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.toast.hidden { display: none; }
+
+h3 { margin: 10px 0; }

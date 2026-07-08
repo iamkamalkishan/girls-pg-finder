@@ -1,0 +1,18 @@
+{
+  "name": "SheStay — Girls PG & Hostel Finder",
+  "short_name": "SheStay",
+  "description": "Safe PG & Hostel finder for girls and working women.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fce4f1",
+  "theme_color": "#e91e8c",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

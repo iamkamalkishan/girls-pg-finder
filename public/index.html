@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#e91e8c" />
+  <meta name="description" content="Safe PG & Hostel finder for girls and working women. Verified listings, real reviews." />
+  <title>SheStay — Girls PG & Hostel Finder</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="logo">🛡️ SheStay</div>
+    <div class="tagline">Safe stays for her</div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="search">🔍 Find</button>
+    <button class="tab" data-tab="map">📍 Near Me</button>
+    <button class="tab" data-tab="list">❤️ Saved</button>
+    <button class="tab" data-tab="add">➕ List PG</button>
+  </nav>
+
+  <main>
+    <!-- SEARCH TAB -->
+    <section id="search" class="tab-content active">
+      <div class="filters">
+        <input type="text" id="cityInput" placeholder="City (e.g. Mumbai)" />
+        <input type="text" id="areaInput" placeholder="Area (optional)" />
+        <div class="row">
+          <input type="number" id="minPrice" placeholder="Min ₹" />
+          <input type="number" id="maxPrice" placeholder="Max ₹" />
+        </div>
+        <div class="row">
+          <select id="typeFilter">
+            <option value="">All Types</option>
+            <option value="PG">PG</option>
+            <option value="Hostel">Hostel</option>
+          </select>
+          <select id="sortFilter">
+            <option value="rating">Sort: Rating</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+          </select>
+        </div>
+        <label class="check"><input type="checkbox" id="safetyFilter" /> ✅ Safety Verified only</label>
+        <label class="check"><input type="checkbox" id="foodFilter" /> 🍱 Food included</label>
+        <button class="btn-primary" id="searchBtn">Search PGs</button>
+      </div>
+      <div id="results" class="results"></div>
+    </section>
+
+    <!-- MAP TAB -->
+    <section id="map" class="tab-content">
+      <div class="info-box">
+        <p>📍 Share your location to find PGs near you. We'll list the closest safe stays.</p>
+        <button class="btn-primary" id="locBtn">Use My Location</button>
+        <div id="nearResults" class="results"></div>
+      </div>
+    </section>
+
+    <!-- SAVED TAB -->
+    <section id="list" class="tab-content">
+      <h3>Saved PGs</h3>
+      <div id="savedResults" class="results"></div>
+    </section>
+
+    <!-- ADD PG TAB -->
+    <section id="add" class="tab-content">
+      <h3>List Your Girls PG / Hostel</h3>
+      <div class="filters">
+        <input type="text" id="a_name" placeholder="PG Name" />
+        <input type="text" id="a_city" placeholder="City" />
+        <input type="text" id="a_area" placeholder="Area" />
+        <input type="number" id="a_price" placeholder="Monthly Price ₹" />
+        <select id="a_type">
+          <option value="PG">PG</option>
+          <option value="Hostel">Hostel</option>
+        </select>
+        <input type="text" id="a_phone" placeholder="Contact Phone" />
+        <textarea id="a_addr" placeholder="Full Address"></textarea>
+        <button class="btn-primary" id="addBtn">Submit Listing</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- DETAIL MODAL -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close" id="modalClose">&times;</span>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
