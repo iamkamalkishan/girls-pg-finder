@@ -4,24 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#e91e8c" />
-  <meta name="description" content="Safe PG & Hostel finder for girls and working women. Verified listings, real reviews." />
+  <meta name="description" content="SheStay - Safe PG & Hostel finder for girls and working women. Verified listings by owners." />
   <title>SheStay — Girls PG & Hostel Finder</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icon.svg" />
   <link rel="stylesheet" href="styles.css" />
+  <!-- Firebase (optional Google login). Configure in firebase-config.js -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 </head>
 <body>
   <header class="app-header">
     <div class="logo">🛡️ SheStay</div>
     <div class="tagline">Safe stays for her</div>
+    <button id="authBtn" class="auth-btn">Login</button>
   </header>
 
   <nav class="tabs">
     <button class="tab active" data-tab="search">🔍 Find</button>
     <button class="tab" data-tab="map">📍 Near Me</button>
     <button class="tab" data-tab="list">❤️ Saved</button>
-    <button class="tab" data-tab="add">➕ List PG</button>
+    <button class="tab" data-tab="owner">🏠 My PGs</button>
   </nav>
 
   <main>
@@ -35,16 +39,8 @@
           <input type="number" id="maxPrice" placeholder="Max ₹" />
         </div>
         <div class="row">
-          <select id="typeFilter">
-            <option value="">All Types</option>
-            <option value="PG">PG</option>
-            <option value="Hostel">Hostel</option>
-          </select>
-          <select id="sortFilter">
-            <option value="rating">Sort: Rating</option>
-            <option value="price_asc">Price: Low to High</option>
-            <option value="price_desc">Price: High to Low</option>
-          </select>
+          <select id="typeFilter"><option value="">All Types</option><option value="PG">PG</option><option value="Hostel">Hostel</option></select>
+          <select id="sortFilter"><option value="rating">Sort: Rating</option><option value="price_asc">Price: Low-High</option><option value="price_desc">Price: High-Low</option></select>
         </div>
         <label class="check"><input type="checkbox" id="safetyFilter" /> ✅ Safety Verified only</label>
         <label class="check"><input type="checkbox" id="foodFilter" /> 🍱 Food included</label>
@@ -56,7 +52,7 @@
     <!-- MAP TAB -->
     <section id="map" class="tab-content">
       <div class="info-box">
-        <p>📍 Share your location to find PGs near you. We'll list the closest safe stays.</p>
+        <p>📍 Share your location to find PGs near you.</p>
         <button class="btn-primary" id="locBtn">Use My Location</button>
         <div id="nearResults" class="results"></div>
       </div>
@@ -68,24 +64,68 @@
       <div id="savedResults" class="results"></div>
     </section>
 
-    <!-- ADD PG TAB -->
-    <section id="add" class="tab-content">
-      <h3>List Your Girls PG / Hostel</h3>
-      <div class="filters">
-        <input type="text" id="a_name" placeholder="PG Name" />
-        <input type="text" id="a_city" placeholder="City" />
-        <input type="text" id="a_area" placeholder="Area" />
-        <input type="number" id="a_price" placeholder="Monthly Price ₹" />
-        <select id="a_type">
-          <option value="PG">PG</option>
-          <option value="Hostel">Hostel</option>
-        </select>
-        <input type="text" id="a_phone" placeholder="Contact Phone" />
-        <textarea id="a_addr" placeholder="Full Address"></textarea>
-        <button class="btn-primary" id="addBtn">Submit Listing</button>
+    <!-- OWNER TAB -->
+    <section id="owner" class="tab-content">
+      <div id="ownerLoggedOut">
+        <div class="info-box">
+          <h3>Owner Panel</h3>
+          <p>Login to manage your PG listings.</p>
+          <button class="btn-primary" onclick="openAuth()">Owner Login / Signup</button>
+        </div>
+      </div>
+      <div id="ownerLoggedIn" style="display:none">
+        <h3>My PG Listings</h3>
+        <button class="btn-primary" id="addPgBtn" style="margin-bottom:12px">➕ Add New PG</button>
+        <div id="ownerPgs" class="results"></div>
+        <h3 style="margin-top:16px">Inquiries from Customers</h3>
+        <div id="ownerInquiries" class="results"></div>
+        <button class="btn-primary" id="logoutBtn" style="background:#888;margin-top:12px;width:100%">Logout</button>
       </div>
     </section>
   </main>
+
+  <!-- AUTH MODAL -->
+  <div id="authModal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close" onclick="closeAuth()">&times;</span>
+      <h2>Owner Access</h2>
+      <input type="text" id="authName" placeholder="Your Name" style="margin-top:8px" />
+      <input type="email" id="authEmail" placeholder="Email" style="margin-top:8px" />
+      <input type="password" id="authPassword" placeholder="Password (min 6 chars)" style="margin-top:8px" />
+      <button class="btn-primary" id="loginBtn" style="margin-top:12px;width:100%">Login</button>
+      <button class="btn-primary" id="signupBtn" style="background:#7b2ff7;margin-top:8px;width:100%">Sign Up</button>
+      <div id="firebaseZone" style="margin-top:12px;border-top:1px solid #eee;padding-top:12px">
+        <button id="googleBtn" class="btn-primary" style="background:#fff;color:#444;border:1px solid #ccc;width:100%">🔵 Continue with Google</button>
+        <small style="color:#888">Enable in firebase-config.js with your Firebase keys</small>
+      </div>
+      <p id="authError" style="color:#e91e8c;margin-top:8px"></p>
+    </div>
+  </div>
+
+  <!-- ADD/EDIT PG MODAL -->
+  <div id="pgModal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close" onclick="closePgModal()">&times;</span>
+      <h2 id="pgModalTitle">Add PG</h2>
+      <input type="text" id="pg_name" placeholder="PG / Hostel Name" style="margin-top:8px" />
+      <div class="row">
+        <input type="text" id="pg_city" placeholder="City" />
+        <input type="text" id="pg_area" placeholder="Area" />
+      </div>
+      <div class="row">
+        <input type="number" id="pg_price" placeholder="Monthly ₹" />
+        <select id="pg_type"><option value="PG">PG</option><option value="Hostel">Hostel</option></select>
+      </div>
+      <input type="text" id="pg_sharing" placeholder="Sharing (e.g. 2 Sharing)" style="margin-top:8px" />
+      <input type="text" id="pg_phone" placeholder="Contact Phone" style="margin-top:8px" />
+      <textarea id="pg_address" placeholder="Full Address" style="margin-top:8px"></textarea>
+      <textarea id="pg_amenities" placeholder="Amenities (comma separated): WiFi, AC, CCTV" style="margin-top:8px"></textarea>
+      <textarea id="pg_rules" placeholder="Rules" style="margin-top:8px"></textarea>
+      <label class="check" style="margin-top:8px"><input type="checkbox" id="pg_food" /> 🍱 Food included</label>
+      <button class="btn-primary" id="savePgBtn" style="margin-top:12px;width:100%">Save Listing</button>
+      <p id="pgError" style="color:#e91e8c"></p>
+    </div>
+  </div>
 
   <!-- DETAIL MODAL -->
   <div id="modal" class="modal hidden">
@@ -97,6 +137,7 @@
 
   <div id="toast" class="toast hidden"></div>
 
+  <script src="firebase-config.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
